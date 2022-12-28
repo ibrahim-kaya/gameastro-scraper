@@ -29,7 +29,6 @@ app.get('/getPageContent', async (req, res) => {
             '--no-sandbox',
             '--disable-setuid-sandbox',
             '--disable-infobars',
-            '--enable-javascript',
             '--window-position=0,0',
             '--ignore-certifcate-errors',
             '--ignore-certifcate-errors-spki-list',

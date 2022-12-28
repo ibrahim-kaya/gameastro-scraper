@@ -10,7 +10,7 @@ app.get('/getPageContent', async (req, res) => {
     const sites = {
         'prime' : {
             url: 'https://gaming.amazon.com/home',
-            selector: '.item-card-details'
+            selector: '.item-card__availability-callout__container'
         },
         'indiegala' : {
             url: 'https://freebies.indiegala.com/',
@@ -60,5 +60,5 @@ app.get('/getPageContent', async (req, res) => {
     }
 });
 
-const port = process.env.PORT || 80;
+const port = process.env.PORT || 3001;
 app.listen(port, () => console.log(`API listening on port ${port}`));

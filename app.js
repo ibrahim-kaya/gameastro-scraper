@@ -10,7 +10,7 @@ app.get('/getPageContent', async (req, res) => {
     const sites = {
         'prime' : {
             url: 'https://gaming.amazon.com/home',
-            selector: '.swiper-container'
+            selector: '.item-card-details'
         },
         'indiegala' : {
             url: 'https://freebies.indiegala.com/',
@@ -29,6 +29,7 @@ app.get('/getPageContent', async (req, res) => {
             '--no-sandbox',
             '--disable-setuid-sandbox',
             '--disable-infobars',
+            '--enable-javascript',
             '--window-position=0,0',
             '--ignore-certifcate-errors',
             '--ignore-certifcate-errors-spki-list',
@@ -53,7 +54,7 @@ app.get('/getPageContent', async (req, res) => {
         const pageContent = await page.evaluate(() => document.body.innerHTML);
         await browser.close();
 
-        res.json({ status: true, content: pageContent });
+        res.send(pageContent);
     } catch (error) {
         res.status(500).json({ status: false, content: error.toString() });
     }

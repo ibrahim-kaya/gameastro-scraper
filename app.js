@@ -60,5 +60,5 @@ app.get('/getPageContent', async (req, res) => {
     }
 });
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 80;
 app.listen(port, () => console.log(`API listening on port ${port}`));

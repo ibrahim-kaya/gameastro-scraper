@@ -15,6 +15,10 @@ app.get('/getPageContent', async (req, res) => {
         'indiegala' : {
             url: 'https://freebies.indiegala.com/',
             selector: '.contents-wrapper'
+        },
+        'ubisoft' : {
+            url: 'https://free.ubisoft.com/',
+            selector: '.free-event'
         }
     }
 
@@ -59,5 +63,5 @@ app.get('/getPageContent', async (req, res) => {
     }
 });
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 80;
 app.listen(port, () => console.log(`API listening on port ${port}`));

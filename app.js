@@ -5,24 +5,31 @@ const fs = require('fs');
 const app = express();
 
 app.get('/getPageContent', async (req, res) => {
-    if(!req.query.site) return res.status(400).json({ status: false, content: 'Invalid request!' });
+    if (!req.query.site) return res.status(400).json({status: false, content: 'Invalid request!'});
 
     const sites = {
-        'prime' : {
+        'prime': {
             url: 'https://gaming.amazon.com/home',
             selector: '.item-card__availability-callout__container'
         },
-        'indiegala' : {
+        'indiegala': {
             url: 'https://freebies.indiegala.com/',
             selector: '.contents-wrapper'
         },
-        'ubisoft' : {
+        'ubisoft': {
             url: 'https://free.ubisoft.com/',
             selector: '.free-event'
+        },
+        'bdo': {
+            url: 'https://www.tr.playblackdesert.com/Community/Detail?topicNo=23669',
+            selector: '.contents_area'
         }
     }
 
-    if (!sites.hasOwnProperty(req.query.site)) return res.status(400).json({ status: false, content: 'Invalid request!' });
+    if (!sites.hasOwnProperty(req.query.site)) return res.status(400).json({
+        status: false,
+        content: 'Invalid request!'
+    });
 
     try {
 
@@ -54,12 +61,37 @@ app.get('/getPageContent', async (req, res) => {
         await page.evaluateOnNewDocument(preloadFile);
         await page.goto(sites[req.query.site].url);
         await page.waitForSelector(sites[req.query.site].selector);
-        const pageContent = await page.evaluate(() => document.body.innerHTML);
-        await browser.close();
 
-        res.send(pageContent);
+        if (req.query.site === 'bdo') {
+            const formattedTextArray = await page.evaluate(() => {
+                const spanElements = document.querySelectorAll('span');
+                const formattedText = [];
+
+                for (const spanElement of spanElements) {
+                    const text = spanElement.textContent.trim();
+                    const match = text.match(/^\w{4}-\w{4}-\w{4}-\w{4}$/);
+                    if (match) {
+                        formattedText.push(match[0]);
+                    }
+                }
+
+                return formattedText;
+            });
+
+            const jsonData = {
+                "data": formattedTextArray,
+            };
+
+            await browser.close();
+
+            res.json(jsonData);
+        } else {
+            const pageContent = await page.evaluate(() => document.body.innerHTML);
+            await browser.close();
+            res.send(pageContent);
+        }
     } catch (error) {
-        res.status(500).json({ status: false, content: error.toString() });
+        res.status(500).json({status: false, content: error.toString()});
     }
 });
 

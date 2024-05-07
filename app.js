@@ -91,6 +91,7 @@ app.get('/getPageContent', async (req, res) => {
             res.send(pageContent);
         }
     } catch (error) {
+        await browser.close();
         res.status(500).json({status: false, content: error.toString()});
     }
 });
